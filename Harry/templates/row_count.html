@@ -1,0 +1,57 @@
+<!-- templates/rowcount.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Row Count</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #11261f;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        img {
+            max-width: 50%;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        h1 {
+            margin-top: 5%;
+        }
+
+        p {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #316956;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            border: none;
+            border-radius: 200px;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 24px;
+            margin-top: 5%;
+        }
+
+        button:hover {
+            background-color: #071c15;
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="Your Image">
+    <h1>Row Count</h1>
+    <p>Total number of rows: {{ count }}</p>
+    <button onclick="window.location.href='/add_guest'">Add Guest</button>
+</body>
+</html>

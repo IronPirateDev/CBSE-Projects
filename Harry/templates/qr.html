@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #11261f;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        h1 {
+            color: #ffffff;
+        }
+        img {
+            max-width: 20%;
+            height: auto;
+            margin: 20px 0; /* Reduced top margin */
+            margin-bottom: 0% ;
+        }
+        p {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+
+        video {
+            width: 640px;
+            height: 480px;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #316956;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            border: none;
+            border-radius: 200px;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 30px;
+            margin: 0px;
+            margin-top: 10%;
+        }
+
+        button:hover {
+            background-color: #071c15;
+        }
+        @media (max-width: 768px) {
+            body {
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                text-align: center;
+                background-color: #11261f;
+                color: #ffffff;
+                margin: 0;
+            }
+
+            h1 {
+                color: #ffffff;
+            }
+
+            p {
+                font-size: 24px;
+                margin: 20px 0;
+            }
+
+            video {
+                width: 100%; /* Use full width of the container */
+                height: auto; /* Maintain aspect ratio */
+                margin: 20px 0;
+            }
+
+            button {
+                background-color: #316956;
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                color: #ffffff;
+                border: none;
+                border-radius: 200px;
+                cursor: pointer;
+                padding: 10px 20px;
+                font-size: 30px;
+                margin: 0px;
+                margin-top: 10%;
+            }
+
+            button:hover {
+                background-color: #071c15;
+            }
+        }
+
+    </style>
+</head>
+<body class="fade-in">
+    <span id="scannedData"></span>
+    <img src="{{ url_for('static', filename='Logo.jpg') }}" alt="Your Image">
+    <p id="presenceMessage"></p>  <!-- Display presence message here -->
+    <video id="video" width="640" height="480" autoplay></video>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script type="text/javascript">
+        let scanner = new Instascan.Scanner({ video: document.getElementById('video') });
+        scanner.addListener('scan', function (content) {
+            // document.getElementById('scannedData').innerText = content; // Update scanned data in the HTML
+            sendDataToServer(content);
+        });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                scanner.start(cameras[0]);
+            } else {
+                console.error('No cameras found.');
+            }
+        }).catch(function (e) {
+            console.error(e);
+        });
+
+        function sendDataToServer(data) {
+            // Using AJAX to send data to the server
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/process_data', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ data: data }));
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Update presence message in the HTML
+                    document.getElementById('presenceMessage').innerText = xhr.responseText;
+                }
+            };
+        }
+    </script>
+</body>
+</html>
